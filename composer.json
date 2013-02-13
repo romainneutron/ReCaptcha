@@ -1,0 +1,19 @@
+{
+    "name"        : "neutron/recaptcha",
+    "description" : "ReCaptcha Client",
+    "license"     : "MIT",
+    "require": {
+        "guzzle/guzzle" : "~3.0"
+    },
+    "authors": [
+        {
+            "name"  : "Romain Neutron",
+            "email" : "imprec@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Neutron"  : "src"
+        }
+    }
+}
