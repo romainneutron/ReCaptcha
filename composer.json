@@ -5,6 +5,9 @@
     "require": {
         "guzzle/guzzle" : "~3.0"
     },
+    "require-dev": {
+        "silex/silex"   : "1.0.x-dev@dev"
+    },
     "authors": [
         {
             "name"  : "Romain Neutron",

@@ -9,6 +9,24 @@ transport layer.
 
 * see https://developers.google.com/recaptcha/docs/customization
 
+# Silex Service Provider
+
+A simple [Silex](http://silex.sensiolabs.org) service provider :
+
+```php
+use Neutron\ReCaptcha\ReCaptcha;
+use Neutron\ReCaptcha\ReCaptchaServiceProvider;
+use Silex\Application;
+
+$app = new Application();
+$app->register(new ReCaptchaServiceProvider(), array(
+    'recaptcha.public-key'  => 'fdspoksqdpofdkpopgqpdskofpkosd',
+    'recaptcha.private-key' => 'lsdmkzfqposfomkcqdsofmsdkfkqsdmfmqsdm',
+));
+
+assert($app['recaptcha'] instanceof ReCaptcha);
+```
+
 # Example
 
 To display a captcha to the client :
