@@ -3,6 +3,7 @@
 namespace Neutron\Tests\ReCaptcha;
 
 use Neutron\ReCaptcha\ReCaptcha;
+use Symfony\Component\HttpFoundation\Request;
 
 class ReCaptchatest extends \PHPUnit_Framework_TestCase
 {
@@ -161,6 +162,70 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $publicKey = 'pub-'.  mt_rand();
         $recaptcha = new ReCaptcha($this->getClientMock(), $publicKey, 'priv');
         $this->assertEquals($publicKey, $recaptcha->getPublicKey());
+    }
+
+    /** @test */
+    public function bindShouldMapTheCorrectFields()
+    {
+        $challenge = 'challenger';
+        $userresponse = 'responser';
+        $ip = '192.168.17.24';
+
+        $httprequest = new Request(
+            array(), // $_GET
+            array(
+                'recaptcha_challenge_field' => $challenge,
+                'recaptcha_response_field'  => $userresponse,
+            ), // $_POST
+            array(),
+            array(),
+            array(),
+            array('REMOTE_ADDR' => $ip)  // $_SERVER
+        );
+
+        $catchParameters = null;
+
+        $request = $this->getMock('Guzzle\Http\Message\EntityEnclosingRequestInterface');
+        $request->expects($this->once())
+            ->method('addPostFields')
+            ->will($this->returnCallback(function ($parameters) use (&$catchParameters) {
+                $catchParameters = $parameters;
+            }));
+
+        $response = $this->getmockBuilder('Guzzle\Http\Message\Response')
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $responseData = "true";
+
+        $response->expects($this->once())
+            ->method('getBody')
+            ->with($this->equalTo(true))
+            ->will($this->returnValue($responseData));
+
+        $request->expects($this->once())
+            ->method('send')
+            ->will($this->returnValue($response));
+
+        $client = $this->getClientMock();
+        $client->expects($this->once())
+            ->method('post')
+            ->will($this->returnValue($request));
+
+        $recaptcha = new ReCaptcha($client, 'pub', 'private');
+        $answer = $recaptcha->bind($httprequest);
+
+        $this->assertInternalType('array', $catchParameters);
+
+        $this->assertArrayHasKey('challenge', $catchParameters);
+        $this->assertArrayHasKey('response', $catchParameters);
+
+        $this->assertEquals($challenge, $catchParameters['challenge']);
+        $this->assertEquals($userresponse, $catchParameters['response']);
+        $this->assertEquals($ip, $catchParameters['remoteip']);
+
+        $this->assertInstanceOf('Neutron\ReCaptcha\Response', $answer);
+        $this->assertTrue($answer->isValid());
     }
 
     private function getClientMock()

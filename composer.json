@@ -3,10 +3,14 @@
     "description" : "ReCaptcha Client",
     "license"     : "MIT",
     "require": {
-        "guzzle/guzzle" : "~3.0"
+        "guzzle/guzzle"           : "~3.0"
     },
     "require-dev": {
-        "silex/silex"   : "1.0.x-dev@dev"
+        "silex/silex"             : "1.0.x-dev@dev",
+        "symfony/http-foundation" : "~2.0"
+    },
+    "suggest": {
+        "symfony/http-foundation" : "To bind symfony request to ReCaptcha"
     },
     "authors": [
         {

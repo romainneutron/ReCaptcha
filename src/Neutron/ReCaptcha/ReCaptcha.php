@@ -5,6 +5,7 @@ namespace Neutron\ReCaptcha;
 use Guzzle\Http\Client;
 use Guzzle\Http\ClientInterface;
 use Neutron\ReCaptcha\Exception\InvalidArgumentException;
+use Symfony\Component\HttpFoundation\Request;
 
 /** @see https://developers.google.com/recaptcha/docs/customization */
 class ReCaptcha
@@ -18,6 +19,11 @@ class ReCaptcha
         $this->client = $client;
         $this->privateKey = $privateKey;
         $this->publicKey = $publicKey;
+    }
+
+    public function bind(Request $request, $challenge = 'recaptcha_challenge_field', $response = 'recaptcha_response_field')
+    {
+        return $this->checkAnswer($request->getClientIp(), $request->request->get($challenge), $request->request->get($response));
     }
 
     public function checkAnswer($ip, $challenge, $response)

@@ -36,7 +36,8 @@ $app->register(new ReCaptchaServiceProvider(), array(
     'recaptcha.private-key' => 'lsdmkzfqposfomkcqdsofmsdkfkqsdmfmqsdm',
 ));
 
-assert($app['recaptcha'] instanceof ReCaptcha);
+// $captcha is an instance of Neutron\ReCaptcha\Response
+$captcha = $app['recaptcha']->bind($app['request']);
 ```
 
 ## Usage Example
@@ -94,6 +95,25 @@ use Neutron\ReCaptcha\ReCaptcha;
 
 $recaptcha = ReCaptcha::create($publicKey, $privateKey);
 $response = $recaptcha->checkAnswer($_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
+
+if ($response->isValid()) {
+    echo "YEAH !";
+} else {
+    echo "Too bad dude :(";
+}
+```
+
+## Bind Symfony Request
+
+A shortcut exists to bind a [Symfony Request](http://api.symfony.com/master/Symfony/Component/HttpFoundation/Request.html)
+to ReCaptcha :
+
+```php
+use Neutron\ReCaptcha\ReCaptcha;
+use Symfony\Component\HttpFoundation\Request;
+
+$recaptcha = ReCaptcha::create($publicKey, $privateKey);
+$response = $recaptcha->bind(Request::createFromGlobals());
 
 if ($response->isValid()) {
     echo "YEAH !";
