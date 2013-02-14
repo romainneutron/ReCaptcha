@@ -9,7 +9,19 @@ transport layer.
 
 * see https://developers.google.com/recaptcha/docs/customization
 
-# Silex Service Provider
+## Install
+
+The recommended way to use ReCaptcha is [through composer](http://getcomposer.org).
+
+```json
+{
+    "require": {
+        "neutron/recaptcha": "~0.1.0"
+    }
+}
+```
+
+## Silex Service Provider
 
 A simple [Silex](http://silex.sensiolabs.org) service provider :
 
@@ -27,7 +39,7 @@ $app->register(new ReCaptchaServiceProvider(), array(
 assert($app['recaptcha'] instanceof ReCaptcha);
 ```
 
-# Example
+## Usage Example
 
 To display a captcha to the client :
 
