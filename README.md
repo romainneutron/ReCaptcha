@@ -38,6 +38,12 @@ $app->register(new ReCaptchaServiceProvider(), array(
 
 // $captcha is an instance of Neutron\ReCaptcha\Response
 $captcha = $app['recaptcha']->bind($app['request']);
+
+if ($captcha->isValid()) {
+    echo "YEAH !";
+} else {
+    echo "Too bad dude :( " . $captcha->getError();
+}
 ```
 
 ## Usage Example
@@ -118,7 +124,7 @@ $response = $recaptcha->bind(Request::createFromGlobals());
 if ($response->isValid()) {
     echo "YEAH !";
 } else {
-    echo "Too bad dude :(";
+    echo "Too bad dude :( " . $response->getError();
 }
 ```
 
