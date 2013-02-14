@@ -57,7 +57,7 @@ $recaptcha = ReCaptcha::create($publicKey, $privateKey);
 </form>
 ```
 
-* Server side :
+ - Server side :
 
 ```php
 use Neutron\ReCaptcha\ReCaptcha;
