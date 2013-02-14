@@ -13,7 +13,8 @@ transport layer.
 
 To display a captcha to the client :
 
-* initialize your captcha object :
+* Initialize your captcha object :
+
 ```php
 use Neutron\ReCaptcha\ReCaptcha;
 
@@ -21,6 +22,7 @@ $recaptcha = ReCaptcha::create($publicKey, $privateKey);
 ```
 
 * In your template :
+
 ```html
 <script type="text/javascript">
     var RecaptchaOptions = {
@@ -56,6 +58,7 @@ $recaptcha = ReCaptcha::create($publicKey, $privateKey);
 ```
 
 * Server side :
+
 ```php
 use Neutron\ReCaptcha\ReCaptcha;
 
