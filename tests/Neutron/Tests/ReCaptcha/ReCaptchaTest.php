@@ -40,6 +40,23 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $recaptcha->checkAnswer('ip', $challenge, $response);
     }
 
+    /**
+     * @test
+     * @dataProvider provideBadChallengeResponse
+     */
+    public function checkIsNotSetup($private, $public)
+    {
+        $recaptcha = new ReCaptcha($this->getClientMock(), $private, $public);
+        $this->assertFalse($recaptcha->isSetup());
+    }
+
+    /** @test */
+    public function checkIsSetup()
+    {
+        $recaptcha = new ReCaptcha($this->getClientMock(), 'private', 'public');
+        $this->assertTrue($recaptcha->isSetup());
+    }
+
     /** @test */
     public function checkAnswerShouldSendARequestAndParseAGoodResponse()
     {

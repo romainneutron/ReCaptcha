@@ -21,6 +21,11 @@ class ReCaptcha
         $this->publicKey = $publicKey;
     }
 
+    public function isSetup()
+    {
+        return '' !== trim($this->privateKey) && '' !== trim($this->publicKey);
+    }
+
     public function bind(Request $request, $challenge = 'recaptcha_challenge_field', $response = 'recaptcha_response_field')
     {
         return $this->checkAnswer($request->getClientIp(), $request->request->get($challenge), $request->request->get($response));
