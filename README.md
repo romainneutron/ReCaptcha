@@ -46,6 +46,22 @@ if ($captcha->isValid()) {
 }
 ```
 
+## Laravel Integration
+
+The package has built-in support for [Laravel](http://laravel.com). To make use of it, add the service provider to your `providers` array and the facade to your `aliases` array, on `app/config/app.php`:
+
+```php
+'providers' => array(
+    'Neutron\ReCaptcha\Laravel\ReCaptchaServiceProvider',
+    // ...
+),
+// ...
+'aliases' => array(
+    'ReCaptcha' => 'Neutron\ReCaptcha\Laravel\ReCaptchaFacade',
+    // ...
+),
+```
+
 ## Usage Example
 
 To display a captcha to the client :
