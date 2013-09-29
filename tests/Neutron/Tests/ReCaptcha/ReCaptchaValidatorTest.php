@@ -15,12 +15,12 @@ class ReCaptchaValidatorTest extends \PHPUnit_Framework_TestCase
         $translator = $this->getTranslator();
         $request = $this->getRequestMock();
 
-        $validator = new ReCaptchaValidator($recaptcha, $request, $translator, [
+        $validator = new ReCaptchaValidator($recaptcha, $request, $translator, array(
             'recaptcha_challenge_field' => 'super-challenge',
             'recaptcha_response_field'  => 'super-response',
-        ], [
+        ), array(
             'recaptcha_response_field'  => 'recaptcha',
-        ]);
+        ));
 
         $this->assertFalse($validator->passes());
         $validator->messages()->setFormat(':message');
