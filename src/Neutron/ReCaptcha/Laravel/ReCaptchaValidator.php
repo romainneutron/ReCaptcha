@@ -27,12 +27,12 @@ class ReCaptchaValidator extends Validator
     /**
      * Create a new Validator instance.
      *
-     * @param  \Neutron\ReCaptcha\ReCaptcha                        $recaptcha
-     * @param  \Symfony\Component\HttpFoundation\Request           $request
-     * @param  \Symfony\Component\Translation\TranslatorInterface  $translator
-     * @param  array  $data
-     * @param  array  $rules
-     * @param  array  $messages
+     * @param  \Neutron\ReCaptcha\ReCaptcha                       $recaptcha
+     * @param  \Symfony\Component\HttpFoundation\Request          $request
+     * @param  \Symfony\Component\Translation\TranslatorInterface $translator
+     * @param  array                                              $data
+     * @param  array                                              $rules
+     * @param  array                                              $messages
      * @return void
      */
     public function __construct(ReCaptcha $recaptcha, Request $request, TranslatorInterface $translator, $data, $rules, $messages = array())
@@ -46,9 +46,9 @@ class ReCaptchaValidator extends Validator
     /**
      * Validate that the recaptcha was correctly typed
      *
-     * @param  string  $attribute
-     * @param  mixed   $value
-     * @param  mixed   $parameters
+     * @param  string $attribute
+     * @param  mixed  $value
+     * @param  mixed  $parameters
      * @return bool
      */
     protected function validateRecaptcha($attribute, $value, $parameters = array())
