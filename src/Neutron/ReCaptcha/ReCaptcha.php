@@ -61,6 +61,28 @@ class ReCaptcha
         return new Response(false, isset($data[1]) ? $data[1] : null);
     }
 
+    public function checkBetaAnswer($response)
+    {
+        if ('' === trim($response)) {
+            return new Response(false, 'incorrect-captcha-sol');
+        }
+
+        $request = $this->client->post('/recaptcha/api/siteverify');
+        $request->addPostFields(array(
+            'secret'   => $this->privateKey,
+            'response' => $response
+        ));
+
+        $response = $request->send();
+        $data = json_decode($response->getBody(true));
+
+        if ($data->success) {
+            return new Response(true);
+        }
+
+        return new Response(false, isset($data->error_codes) ? $data->error_codes : null);
+    }
+
     public function getPublicKey()
     {
         return $this->publicKey;
