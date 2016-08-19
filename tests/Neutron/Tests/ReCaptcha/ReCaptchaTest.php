@@ -2,6 +2,7 @@
 
 namespace Neutron\Tests\ReCaptcha;
 
+use Neutron\ReCaptcha\Exception\InvalidArgumentException;
 use Neutron\ReCaptcha\ReCaptcha;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -22,7 +23,7 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
     /**
      * @test
      * @dataProvider provideBadIps
-     * @expectedException Neutron\ReCaptcha\Exception\InvalidArgumentException
+     * @expectedException InvalidArgumentException
      */
     public function checkAnswerShouldFailWithoutIp($ip)
     {
@@ -65,34 +66,26 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $challenge = 'challenge-'.mt_rand();
         $ip = 'ip-'.mt_rand();
 
+        $catchType = null;
+        $catchUri = null;
         $catchParameters = null;
-
-        $request = $this->getMock('Guzzle\Http\Message\EntityEnclosingRequestInterface');
-        $request->expects($this->once())
-            ->method('addPostFields')
-            ->will($this->returnCallback(function ($parameters) use (&$catchParameters) {
-                $catchParameters = $parameters;
-            }));
-
-        $response = $this->getmockBuilder('Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $responseData = 'true';
 
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->once())
             ->method('getBody')
-            ->with($this->equalTo(true))
             ->will($this->returnValue($responseData));
-
-        $request->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response));
 
         $client = $this->getClientMock();
         $client->expects($this->once())
-            ->method('post')
-            ->will($this->returnValue($request));
+            ->method('request')
+            ->will($this->returnCallback(function ($type, $uri, $parameters) use (&$catchParameters, &$catchType, &$catchUri, $response) {
+                $catchType = $type;
+                $catchUri = $uri;
+                $catchParameters = $parameters['form_params'];
+                return $response;
+            }));
 
         $recaptcha = new ReCaptcha($client, 'pub', $private);
         $answer = $recaptcha->checkAnswer($ip, $challenge, $userresponse);
@@ -108,6 +101,9 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($ip, $catchParameters['remoteip']);
         $this->assertEquals($challenge, $catchParameters['challenge']);
         $this->assertEquals($userresponse, $catchParameters['response']);
+
+        $this->assertEquals('POST', $catchType);
+        $this->assertEquals('/recaptcha/api/verify', $catchUri);
 
         $this->assertInstanceOf('Neutron\ReCaptcha\Response', $answer);
         $this->assertTrue($answer->isValid());
@@ -123,35 +119,27 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $challenge = 'challenge-'.mt_rand();
         $ip = 'ip-'.mt_rand();
 
+        $catchType = null;
+        $catchUri = null;
         $catchParameters = null;
-
-        $request = $this->getMock('Guzzle\Http\Message\EntityEnclosingRequestInterface');
-        $request->expects($this->once())
-            ->method('addPostFields')
-            ->will($this->returnCallback(function ($parameters) use (&$catchParameters) {
-                $catchParameters = $parameters;
-            }));
-
-        $response = $this->getmockBuilder('Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $errormsg = 'this is unit tests dude';
         $responseData = "false\n$errormsg";
 
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->once())
             ->method('getBody')
-            ->with($this->equalTo(true))
             ->will($this->returnValue($responseData));
-
-        $request->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response));
 
         $client = $this->getClientMock();
         $client->expects($this->once())
-            ->method('post')
-            ->will($this->returnValue($request));
+            ->method('request')
+            ->will($this->returnCallback(function ($type, $uri, $parameters) use (&$catchParameters, &$catchType, &$catchUri, $response) {
+                $catchType = $type;
+                $catchUri = $uri;
+                $catchParameters = $parameters['form_params'];
+                return $response;
+            }));
 
         $recaptcha = new ReCaptcha($client, 'pub', $private);
         $answer = $recaptcha->checkAnswer($ip, $challenge, $userresponse);
@@ -167,6 +155,9 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($ip, $catchParameters['remoteip']);
         $this->assertEquals($challenge, $catchParameters['challenge']);
         $this->assertEquals($userresponse, $catchParameters['response']);
+
+        $this->assertEquals('POST', $catchType);
+        $this->assertEquals('/recaptcha/api/verify', $catchUri);
 
         $this->assertInstanceOf('Neutron\ReCaptcha\Response', $answer);
         $this->assertFalse($answer->isValid());
@@ -200,34 +191,26 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
             array('REMOTE_ADDR' => $ip)  // $_SERVER
         );
 
+        $catchType = null;
+        $catchUri = null;
         $catchParameters = null;
-
-        $request = $this->getMock('Guzzle\Http\Message\EntityEnclosingRequestInterface');
-        $request->expects($this->once())
-            ->method('addPostFields')
-            ->will($this->returnCallback(function ($parameters) use (&$catchParameters) {
-                $catchParameters = $parameters;
-            }));
-
-        $response = $this->getmockBuilder('Guzzle\Http\Message\Response')
-            ->disableOriginalConstructor()
-            ->getMock();
 
         $responseData = "true";
 
+        $response = $this->getMock('Psr\Http\Message\ResponseInterface');
         $response->expects($this->once())
             ->method('getBody')
-            ->with($this->equalTo(true))
             ->will($this->returnValue($responseData));
-
-        $request->expects($this->once())
-            ->method('send')
-            ->will($this->returnValue($response));
 
         $client = $this->getClientMock();
         $client->expects($this->once())
-            ->method('post')
-            ->will($this->returnValue($request));
+            ->method('request')
+            ->will($this->returnCallback(function ($type, $uri, $parameters) use (&$catchParameters, &$catchType, &$catchUri, $response) {
+                $catchType = $type;
+                $catchUri = $uri;
+                $catchParameters = $parameters['form_params'];
+                return $response;
+            }));
 
         $recaptcha = new ReCaptcha($client, 'pub', 'private');
         $answer = $recaptcha->bind($httprequest);
@@ -241,13 +224,16 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($userresponse, $catchParameters['response']);
         $this->assertEquals($ip, $catchParameters['remoteip']);
 
+        $this->assertEquals('POST', $catchType);
+        $this->assertEquals('/recaptcha/api/verify', $catchUri);
+
         $this->assertInstanceOf('Neutron\ReCaptcha\Response', $answer);
         $this->assertTrue($answer->isValid());
     }
 
     private function getClientMock()
     {
-        return $this->getMock('Guzzle\Http\ClientInterface');
+        return $this->getMock('GuzzleHttp\ClientInterface');
     }
 
     public function provideBadIps()

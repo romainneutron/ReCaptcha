@@ -2,8 +2,8 @@
 
 namespace Neutron\ReCaptcha;
 
-use Guzzle\Http\Client;
-use Guzzle\Http\ClientInterface;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
 use Neutron\ReCaptcha\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -43,16 +43,16 @@ class ReCaptcha
             return new Response(false, 'incorrect-captcha-sol');
         }
 
-        $request = $this->client->post('/recaptcha/api/verify');
-        $request->addPostFields(array(
-            'privatekey' => $this->privateKey,
-            'remoteip'   => $ip,
-            'challenge'  => $challenge,
-            'response'   => $response
-        ));
-
-        $response = $request->send();
-        $data = explode("\n", $response->getBody(true));
+        $response = $this->client->request('POST', '/recaptcha/api/verify', [
+            'form_params' => [
+                'privatekey' => $this->privateKey,
+                'remoteip'   => $ip,
+                'challenge'  => $challenge,
+                'response'   => $response
+            ]
+        ]);
+        
+        $data = explode("\n", $response->getBody());
 
         if ('true' === trim($data[0])) {
             return new Response(true);
@@ -68,6 +68,9 @@ class ReCaptcha
 
     public static function create($publicKey, $privateKey)
     {
-        return new ReCaptcha(new Client('https://www.google.com/recaptcha/api'), $publicKey, $privateKey);
+        $guzzleHttpConfig = [
+            'base_uri' => 'https://www.google.com/recaptcha/api'
+        ];
+        return new ReCaptcha(new Client($guzzleHttpConfig), $publicKey, $privateKey);
     }
 }

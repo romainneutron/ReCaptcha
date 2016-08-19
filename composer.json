@@ -3,7 +3,7 @@
     "description" : "ReCaptcha Client",
     "license"     : "MIT",
     "require": {
-        "guzzle/guzzle"           : "~3.0"
+        "guzzlehttp/guzzle"           : "~6.2"
     },
     "require-dev": {
         "silex/silex"             : "1.0.x-dev@dev",
