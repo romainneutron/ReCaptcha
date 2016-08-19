@@ -180,15 +180,15 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
         $ip = '192.168.17.24';
 
         $httprequest = new Request(
-            array(), // $_GET
-            array(
+            [], // $_GET
+            [
                 'recaptcha_challenge_field' => $challenge,
                 'recaptcha_response_field'  => $userresponse,
-            ), // $_POST
-            array(),
-            array(),
-            array(),
-            array('REMOTE_ADDR' => $ip)  // $_SERVER
+            ], // $_POST
+            [],
+            [],
+            [],
+            ['REMOTE_ADDR' => $ip]  // $_SERVER
         );
 
         $catchType = null;
@@ -238,25 +238,25 @@ class ReCaptchatest extends \PHPUnit_Framework_TestCase
 
     public function provideBadIps()
     {
-        return array(
-            array(null),
-            array(''),
-            array('  '),
-        );
+        return [
+            [null],
+            [''],
+            ['  '],
+        ];
     }
 
     public function provideBadChallengeResponse()
     {
-        return array(
-            array('', 'response'),
-            array('challenge', ''),
-            array('', ''),
-            array(null, 'response'),
-            array('challenge', null),
-            array(null, null),
-            array(' ', 'response'),
-            array('challenge', ' '),
-            array(' ', ' '),
-        );
+        return [
+            ['', 'response'],
+            ['challenge', ''],
+            ['', ''],
+            [null, 'response'],
+            ['challenge', null],
+            [null, null],
+            [' ', 'response'],
+            ['challenge', ' '],
+            [' ', ' '],
+        ];
     }
 }
