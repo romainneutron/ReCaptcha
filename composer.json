@@ -7,6 +7,10 @@
     },
     "require-dev": {
         "silex/silex"             : "1.0.x-dev@dev",
+        "illuminate/config"       : "~4.0.0",
+        "illuminate/support"      : "~4.0.0",
+        "illuminate/validation"   : "~4.0.0",
+        "symfony/translation"     : "~2.0",
         "symfony/http-foundation" : "~2.0"
     },
     "suggest": {
